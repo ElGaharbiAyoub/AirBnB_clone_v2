@@ -5,6 +5,10 @@ from datetime import datetime
 
 
 def do_pack():
+    """
+    generates a .tgz archive from the
+    contents of the web_static folder
+    """
     try:
         local('mkdir -p versions')
         name = "web_static_{}.tgz".format(
