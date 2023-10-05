@@ -7,6 +7,7 @@ env.hosts = ['54.146.56.232', '34.207.58.85']
 env.user = 'ubuntu'
 env.key_filename = '~/.ssh/id_rsa'
 
+
 @runs_once
 def do_pack():
     """
