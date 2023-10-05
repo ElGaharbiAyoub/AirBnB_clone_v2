@@ -23,7 +23,7 @@ def do_pack():
         size = os.path.getsize("./versions/{}.tgz".format(name))
         print("web_static packed: versions/{}.tgz -> {}Bytes".format(
             name, size))
-        return "versions/{}".format(name)
+        return "versions/{}.tgz".format(name)
     except Exception as e:
         return None
 
