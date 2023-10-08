@@ -29,6 +29,7 @@ def do_pack():
         return None
 
 
+@task
 def do_deploy(archive_path):
     """
     Connect to the remote server
@@ -54,6 +55,7 @@ def do_deploy(archive_path):
         return False
 
 
+@task
 def deploy():
     """
     creates and distributes an archive to your web servers
@@ -64,21 +66,32 @@ def deploy():
     return do_deploy(store_path)
 
 
+@runs_once
+def clean_local_archives(number):
+    """
+    Deletes out-of-date local archives.
+    """
+    local("ls -dt versions/ | tail -n +{} | xargs rm -fr".format(
+        number))
+
+
+@runs_once
+def clean_remote_releases(number):
+    """
+    Deletes out-of-date remote releases.
+    """
+    path = "/data/web_static/releases/"
+    run("ls -dt {} | tail -n +{} | xargs rm -fr".format(
+        path, number))
+
+
+@task
 def do_clean(number=0):
     """
     deletes out-of-date archives
     """
-    files = local("ls -1t versions", capture=True)
-    file_names = files.split("\n")
-    n = int(number)
-    if n in (0, 1):
-        n = 1
-    for i in file_names[n:]:
-        local("rm versions/{}".format(i))
-    dir_server = run("ls -1t /data/web_static/releases")
-    dir_server_names = dir_server.split("\n")
-    for i in dir_server_names[n:]:
-        if i is 'test':
-            continue
-        run("rm -rf /data/web_static/releases/{}"
-            .format(i))
+    num = int(number)
+    if num < 1:
+        num = 1
+    clean_local_archives(num)
+    clean_remote_releases(num)
