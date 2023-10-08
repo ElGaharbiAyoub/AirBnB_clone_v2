@@ -84,6 +84,7 @@ def clean_remote_releases(number):
         path, number))
 
 
+@task
 def do_clean(number=0):
     """
     deletes out-of-date archives
