@@ -66,7 +66,6 @@ def deploy():
     return do_deploy(store_path)
 
 
-
 def clean_local_archives(number):
     """
     Deletes out-of-date local archives.
