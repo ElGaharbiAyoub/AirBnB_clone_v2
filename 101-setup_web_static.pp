@@ -1,66 +1,53 @@
-# Define a class for configuring the web server
-class web_server {
-  package { 'nginx':
-    ensure => 'installed',
-  }
+# by itry mo9atil
+# Setup the web servers for the deployment of web_static
+class web_static_setup {
+  $directories = ['/data', '/data/web_static', '/data/web_static/releases', '/data/web_static/releases/test', '/data/web_static/shared']
+  $nginx_package_name = 'nginx'
+  $fake_html_content = '<html>\n  <head>\n  </head>\n  <body>\n    Holberton School\n  </body>\n</html>'
 
-  service { 'nginx':
-    ensure  => 'running',
-    enable  => true,
-    require => Package['nginx'],
-  }
-}
+  exec { '/usr/bin/env apt -y update' : }
+  -> package { $nginx_package_name: ensure => installed, }
 
-# Define a class for configuring the web_static directory and serving the HTML
-class web_static {
-  file { '/data/web_static/shared':
-    ensure => 'directory',
+  file { $directories:
+    ensure => directory,
     owner  => 'ubuntu',
     group  => 'ubuntu',
-  }
-
-  file { '/data/web_static/releases/test':
-    ensure => 'directory',
-    owner  => 'ubuntu',
-    group  => 'ubuntu',
+    mode   => '0755',
+    recurse => true,
   }
 
   file { '/data/web_static/releases/test/index.html':
-    content => "<html>
-<head>
-  </head>
-  <body>
-    <h1>welcome</h1>
-    <h3>I'm ayoub el gharbi from ALX Africa</h3>
-  </body>
-</html>",
-    owner   => 'ubuntu',
-    group   => 'ubuntu',
+    ensure  => file,
+    content => $fake_html_content,
+    require => File[$directories],
   }
 
   file { '/data/web_static/current':
-    ensure => 'link',
+    ensure => link,
     target => '/data/web_static/releases/test',
-    owner  => 'ubuntu',
-    group  => 'ubuntu',
+    force  => true,
+    require => File['/data/web_static/releases/test/index.html'],
+  }
+
+  exec { 'chown -R ubuntu:ubuntu /data/':
+    path => '/usr/bin/:/usr/local/bin/:/bin/',
+    require => File['/data/web_static/current'],
   }
 
   file_line { 'nginx_config':
     path   => '/etc/nginx/sites-available/default',
-    line   => 'location /hbnb_static/ {',
-    match  => '^.*location /hbnb_static/ {',
-    ensure => present,
+    line   => '        location /hbnb_static {\n            alias /data/web_static/current/;\n        }',
+    match  => '^        location /hbnb_static',
+    after  => '^    server {',
+    require => Package[$nginx_package_name],
+    notify  => Service[$nginx_package_name],
   }
 
-  exec { 'nginx_restart':
-    command     => 'service nginx restart',
-    refreshonly => true,
-    subscribe   => [File_line['nginx_config'], Service['nginx']],
+  service { $nginx_package_name:
+    ensure     => running,
+    enable     => true,
+    hasrestart => true,
+    hasstatus  => true,
+    subscribe  => File_line['nginx_config'],
   }
-}
-
-# Include the classes in your node definition
-node 'your_node_name' {
-  include web_server
-  include web_static
 }
