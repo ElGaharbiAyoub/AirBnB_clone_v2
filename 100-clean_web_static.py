@@ -66,7 +66,7 @@ def deploy():
     return do_deploy(store_path)
 
 
-@runs_once
+
 def clean_local_archives(number):
     """
     Deletes out-of-date local archives.
@@ -75,7 +75,6 @@ def clean_local_archives(number):
         number))
 
 
-@runs_once
 def clean_remote_releases(number):
     """
     Deletes out-of-date remote releases.
@@ -85,7 +84,6 @@ def clean_remote_releases(number):
         path, number))
 
 
-@task
 def do_clean(number=0):
     """
     deletes out-of-date archives
