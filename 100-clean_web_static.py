@@ -70,7 +70,7 @@ def clean_local_archives(number):
     """
     Deletes out-of-date local archives.
     """
-    local("cd versions/ && ls -t | tail -n +{} | xargs rm -rf".format(
+    local("cd versions/ && ls -t | tail -n +{} | sudo xargs rm -rf".format(
         number))
 
 
@@ -79,7 +79,7 @@ def clean_remote_releases(number):
     Deletes out-of-date remote releases.
     """
     path = "/data/web_static/releases"
-    run("cd {} && ls -t | tail -n +{} | xargs rm -rf".format(
+    run("cd {} && ls -t | tail -n +{} | sudo xargs rm -rf".format(
         path, number))
 
 
