@@ -71,7 +71,7 @@ def clean_local_archives(number):
     """
     Deletes out-of-date local archives.
     """
-    local("ls -dt versions/ | tail -n +{} | xargs rm -fr".format(
+    local("ls -t versions/ | tail -n +{} | xargs rm -rf".format(
         number))
 
 
@@ -80,8 +80,8 @@ def clean_remote_releases(number):
     """
     Deletes out-of-date remote releases.
     """
-    path = "/data/web_static/releases/"
-    run("ls -dt {} | tail -n +{} | xargs rm -fr".format(
+    path = "/data/web_static/releases"
+    run("ls -t {} | tail -n +{} | xargs rm -rf".format(
         path, number))
 
 
@@ -92,6 +92,8 @@ def do_clean(number=0):
     """
     num = int(number)
     if num < 1:
-        num = 1
+        num = 2
+    else:
+        num += 1
     clean_local_archives(num)
     clean_remote_releases(num)
