@@ -41,16 +41,14 @@ def printNumber(n):
 @app.route('/number_template/<int:n>', strict_slashes=False)
 def number_template(n):
     """display slag number"""
-    if isinstance(n, int):
-        return render_template('5-number.html', number=n)
+    return render_template('5-number.html', number=n)
 
 
 @app.route('/number_odd_or_even/<int:n>', strict_slashes=False)
 def number_odd_or_even(n):
     """display slag number"""
-    if isinstance(n, int):
-        is_even = n % 2 == 0
-        return render_template('6-number_odd_or_even.html', number=n, is_even=is_even)
+    is_even = n % 2 == 0
+    return render_template('6-number_odd_or_even.html', number=n, is_even=is_even)
 
 
 if __name__ == "__main__":
