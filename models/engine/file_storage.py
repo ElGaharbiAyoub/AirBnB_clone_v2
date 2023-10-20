@@ -20,6 +20,7 @@ class FileStorage:
                 'State': State, 'City': City, 'Amenity': Amenity,
                 'Review': Review
                 }
+
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage"""
         if cls is not None:
@@ -51,7 +52,8 @@ class FileStorage:
             with open(FileStorage.__file_path, 'r') as f:
                 temp = json.load(f)
                 for key, val in temp.items():
-                    self.all()[key] = FileStorage.classes[val['__class__']](**val)
+                    self.all()[key] = FileStorage.classes[
+                        val['__class__']](**val)
         except FileNotFoundError:
             pass
 
@@ -64,6 +66,7 @@ class FileStorage:
             if key in FileStorage.__objects:
                 del FileStorage.__objects[key]
                 self.save()
+
     def close(self):
         """method for deserializing the JSON file to objects"""
         self.reload()

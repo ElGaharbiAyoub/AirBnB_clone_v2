@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+"""class storage"""
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
@@ -15,6 +15,7 @@ import os
 classes = {"Amenity": Amenity, "City": City, "Place": Place,
            "Review": Review, "State": State, "User": User}
 
+
 class DBStorage:
     """database storage class
     """
@@ -23,7 +24,7 @@ class DBStorage:
 
     def __init__(self):
         """
-        DBStorage class instances 
+        DBStorage class instances
         """
         db_url = "mysql+mysqldb://{}:{}@{}/{}".format(
             os.getenv("HBNB_MYSQL_USER"),
@@ -43,7 +44,7 @@ class DBStorage:
             for clas in Base.__subclasses__():
                 table = self.__session.query(clas).all()
                 for obj in table:
-                    key = "{}.{}".format(obj.__class__.__name__,obj.id)
+                    key = "{}.{}".format(obj.__class__.__name__, obj.id)
                     objs[key] = obj
         else:
             for obj in self.__session.query(classes[cls]).all():
@@ -75,7 +76,8 @@ class DBStorage:
         and create the current database session
         """
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_factory = sessionmaker(
+            bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
 
