@@ -16,18 +16,20 @@ def hbnb():
     """start flask"""
     return "HBNB"
 
+
 @app.route("/c/<text>",  strict_slashes=False)
 def printC(text):
     """display slag"""
     slag = text.replace("_", " ")
     return "C {}".format(slag)
 
+
 @app.route('/python/', defaults={'text': 'is cool'}, strict_slashes=False)
 @app.route("/python/<text>",  strict_slashes=False)
 def printPython(text):
     """display slag"""
     slag = text.replace("_", " ")
-    return "C {}".format(slag)
+    return "Python {}".format(slag)
 
 
 if __name__ == "__main__":
