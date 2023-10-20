@@ -16,6 +16,7 @@ def hbnb():
     """start flask"""
     return "HBNB"
 
+
 @app.route("/c/<text>",  strict_slashes=False)
 def printC(text):
     """display slag"""
